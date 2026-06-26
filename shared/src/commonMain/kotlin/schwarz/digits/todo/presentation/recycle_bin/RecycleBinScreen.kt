@@ -2,6 +2,7 @@ package schwarz.digits.todo.presentation.recycle_bin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Menu
@@ -72,7 +73,11 @@ fun RecycleBinScreen(
             SuggestionChip(
                 onClick = {},
                 label = { Text("${uiState.removedTasks.size} Tasks", color = AppColor.White) },
-                colors = SuggestionChipDefaults.suggestionChipColors(containerColor = AppColor.Grey300)
+                shape = CircleShape,
+                colors = SuggestionChipDefaults.suggestionChipColors(
+                    containerColor = AppColor.Grey600.copy(alpha = 0.3f)
+                ),
+                border = null
             )
             Spacer(modifier = Modifier.height(8.dp))
             TaskList(

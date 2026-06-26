@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.CircleShape
 import schwarz.digits.todo.domain.model.Task
 import schwarz.digits.todo.presentation.common.TaskList
 import schwarz.digits.todo.presentation.theme.AppColor
@@ -26,7 +27,11 @@ fun CompleteTasksScreen(
         SuggestionChip(
             onClick = {},
             label = { Text("${taskList.size} Tasks", color = AppColor.White) },
-            colors = SuggestionChipDefaults.suggestionChipColors(containerColor = AppColor.Grey300)
+            shape = CircleShape,
+            colors = SuggestionChipDefaults.suggestionChipColors(
+                containerColor = AppColor.Grey600.copy(alpha = 0.3f)
+            ),
+            border = null
         )
         Spacer(modifier = Modifier.height(8.dp))
         TaskList(

@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 object AppColor {
     val White = Color(0xFFFFFFFF)
+    val Grey100 = Color(0xFFEEEEEE)
     val Grey200 = Color(0xFFDDDDDD)
     val Grey300 = Color(0xFFAAAAAA)
     val Grey400 = Color(0xFF777777)

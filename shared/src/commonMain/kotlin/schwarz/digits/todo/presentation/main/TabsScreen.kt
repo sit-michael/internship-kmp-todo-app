@@ -55,10 +55,11 @@ fun TabsScreen(
                     icon = { Icon(Icons.Default.Info, contentDescription = null) },
                     label = { Text("Pending") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = AppColor.Primary,
+                        selectedIconColor = AppColor.Background,
                         unselectedIconColor = AppColor.Grey300,
-                        selectedTextColor = AppColor.Primary,
-                        unselectedTextColor = AppColor.Grey300
+                        selectedTextColor = AppColor.Grey200,
+                        unselectedTextColor = AppColor.Grey300,
+                        indicatorColor = AppColor.Primary
                     )
                 )
                 NavigationBarItem(
@@ -67,10 +68,11 @@ fun TabsScreen(
                     icon = { Icon(Icons.Default.Check, contentDescription = null) },
                     label = { Text("Completed") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = AppColor.Primary,
+                        selectedIconColor = AppColor.Background,
                         unselectedIconColor = AppColor.Grey300,
-                        selectedTextColor = AppColor.Primary,
-                        unselectedTextColor = AppColor.Grey300
+                        selectedTextColor = AppColor.Grey200,
+                        unselectedTextColor = AppColor.Grey300,
+                        indicatorColor = AppColor.Primary
                     )
                 )
                 //TODO(ML): (Ticket FXT-106) Add fav bottombar icon
@@ -122,9 +124,10 @@ fun TabsScreen(
         )
     }
 
-    editingTask?.let { task ->
+    val currentEditingTask = editingTask
+    if (currentEditingTask != null) {
         EditTaskDialog(
-            task = task,
+            task = currentEditingTask,
             onDismiss = { editingTask = null },
             onSave = { viewModel.editTask(it) }
         )
