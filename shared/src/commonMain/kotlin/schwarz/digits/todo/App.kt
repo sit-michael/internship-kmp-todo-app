@@ -1,47 +1,62 @@
 package schwarz.digits.todo
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.resources.painterResource
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
+import schwarz.digits.todo.presentation.main.TabsScreen
+import schwarz.digits.todo.presentation.recycle_bin.RecycleBinScreen
+import schwarz.digits.todo.presentation.splash.SplashScreen
+import schwarz.digits.todo.presentation.theme.AppTheme
+import schwarz.digits.todo.presentation.viewmodel.TaskViewModel
 
-import todo.shared.generated.resources.Res
-import todo.shared.generated.resources.compose_multiplatform
+enum class Screen {
+    Splash,
+    Tabs,
+    RecycleBin
+}
 
 @Composable
-@Preview
 fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+    AppTheme {
+        val viewModel: TaskViewModel = koinInject()
+        val uiState by viewModel.uiState.collectAsState()
+        var currentScreen by remember { mutableStateOf(Screen.Splash) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+
+        Scaffold(
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            modifier = Modifier.fillMaxSize()
+        ) { paddingValues ->
+            when (currentScreen) {
+                Screen.Splash -> {
+                    SplashScreen(
+                        onNextPage = { currentScreen = Screen.Tabs }
+                    )
+                }
+                Screen.Tabs -> {
+                    TabsScreen(
+                        viewModel = viewModel,
+                        uiState = uiState,
+                        onNavigateToBin = { currentScreen = Screen.RecycleBin },
+                        showSnackbar = { msg ->
+                            scope.launch {
+                                snackbarHostState.showSnackbar(msg)
+                            }
+                        }
+                    )
+                }
+                Screen.RecycleBin -> {
+                    RecycleBinScreen(
+                        viewModel = viewModel,
+                        uiState = uiState,
+                        onNavigateToTasks = { currentScreen = Screen.Tabs }
+                    )
                 }
             }
         }
